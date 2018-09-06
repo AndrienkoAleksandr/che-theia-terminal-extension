@@ -12,7 +12,7 @@
 // todo apply context to the server side
 
 export const TERMINAL_SERVER_TYPE = "terminal";
-export const CONNECT_TERMINAL_SEGMENT = "/connect";
+export const CONNECT_TERMINAL_SEGMENT = "connect";
 export const ATTACH_TERMINAL_SEGMENT = "/attach";
 
 export interface MachineIdentifier {
