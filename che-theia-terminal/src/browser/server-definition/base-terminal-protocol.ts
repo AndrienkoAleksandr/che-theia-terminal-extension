@@ -13,7 +13,7 @@
 
 export const TERMINAL_SERVER_TYPE = "terminal";
 export const CONNECT_TERMINAL_SEGMENT = "connect";
-export const ATTACH_TERMINAL_SEGMENT = "/attach";
+export const ATTACH_TERMINAL_SEGMENT = "attach";
 
 export interface MachineIdentifier {
     machineName: string,

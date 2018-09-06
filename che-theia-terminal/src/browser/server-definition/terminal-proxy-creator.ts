@@ -30,6 +30,7 @@ export class TerminalProxyCreator {
     create(): IBaseTerminalServer  {
         if (!this.server) {
             const uri = new URI(this.apiEndPoint).resolve(CONNECT_TERMINAL_SEGMENT);
+            console.log("Connect url" + uri);
             this.server = this.connProvider.createProxy<IBaseTerminalServer>(uri.toString());
         }
         return this.server;

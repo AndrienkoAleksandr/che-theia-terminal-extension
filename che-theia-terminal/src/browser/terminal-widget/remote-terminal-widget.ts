@@ -13,6 +13,7 @@ import { ThemeService } from "@theia/core/lib/browser/theming";
 import { Deferred } from "@theia/core/lib/common/promise-util";
 import { ResizeParam, ATTACH_TERMINAL_SEGMENT, IBaseTerminalServer } from "../server-definition/base-terminal-protocol";
 import { TerminalProxyCreatorProvider, TerminalProxyCreator } from "../server-definition/terminal-proxy-creator";
+import URI from "@theia/core/lib/common/uri";
 
 Xterm.Terminal.applyAddon(require('xterm/lib/addons/fit/fit'));
 Xterm.Terminal.applyAddon(require('xterm/lib/addons/attach/attach'));
@@ -290,8 +291,9 @@ export class RemoteTerminalWidget extends BaseWidget implements StatefulWidget {
     }
 
     protected createWebSocket(pid: string): WebSocket {
-        const url = this.termEndPoint  + ATTACH_TERMINAL_SEGMENT + "/" + this.terminalId;
-        return this.webSocketConnectionProvider.createWebSocket(url, { reconnecting: false });
+        const url = new URI(this.termEndPoint).resolve(ATTACH_TERMINAL_SEGMENT).resolve(this.terminalId + '');
+        console.log("Attach url = " + url.toString());
+        return this.webSocketConnectionProvider.createWebSocket(url.toString(), { reconnecting: false });
     }
 
     protected onActivateRequest(msg: Message): void {
