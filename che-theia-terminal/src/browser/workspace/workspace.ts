@@ -9,7 +9,7 @@
  **********************************************************************/
 
 import { injectable, inject } from "inversify";
-import WorkspaceClient, { IWorkspace, IRequestError, IRemoteAPI, IServer, IMachine } from "@eclipse-che/workspace-client";
+import WorkspaceClient, { IWorkspace, IRequestError, IRemoteAPI, IServer, IMachine, IRestAPIConfig } from "@eclipse-che/workspace-client";
 import { EnvVariablesServer } from '@theia/core/lib/common/env-variables';
 import { TERMINAL_SERVER_TYPE } from "../server-definition/base-terminal-protocol";
 
@@ -82,12 +82,19 @@ export class Workspace {
         return await this.baseEnvVariablesServer.getValue("CHE_API_EXTERNAL").then(v => v ? v.value : undefined);
     }
 
+    public async getMachineToken(): Promise<string> {
+        return await this.baseEnvVariablesServer.getValue("CHE_MACHINE_TOKEN").then(v => v ? v.value : undefined);
+    }
+
     private async getRemoteApi(): Promise<IRemoteAPI> {
         if (!this.api) {
+            const machineToken = await this.getMachineToken();
             const baseUrl = await this.getWsMasterApiEndPoint();
-            this.api = WorkspaceClient.getRestApi({
-                baseUrl: baseUrl
-            });
+            const restConfig: IRestAPIConfig = {baseUrl: baseUrl, headers: {}};
+            if (machineToken) {
+                restConfig.headers['Authorization'] = "Bearer " + machineToken;
+            }
+            this.api = WorkspaceClient.getRestApi(restConfig);
         }
         return this.api;
     }
